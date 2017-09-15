@@ -1,0 +1,6 @@
+framework module Pods_FacebookPhotoViewer {
+  umbrella header "Pods-FacebookPhotoViewer-umbrella.h"
+
+  export *
+  module * { export * }
+}
