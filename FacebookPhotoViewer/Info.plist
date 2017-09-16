@@ -54,7 +54,7 @@
     <key>FacebookAppID</key>
     <string>115931869077959</string>
     <key>FacebookDisplayName</key>
-    <string>F Photo Viewer</string>
+    <string>Photo Viewer</string>
     <key>LSApplicationQueriesSchemes</key>
     <array>
         <string>fbapi</string>

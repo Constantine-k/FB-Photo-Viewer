@@ -12,16 +12,16 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         /// Facebook login button
         let loginButton = FBSDKLoginButton()
+        loginButton.readPermissions = ["email", "user_photos"];
+        loginButton.delegate = self
         loginButton.center = view.center
         view.addSubview(loginButton)
-        
-        loginButton.delegate = self
         
         if (FBSDKAccessToken.current() != nil) {
             // User is logged in, do work such as go to next view controller.
