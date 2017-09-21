@@ -13,19 +13,6 @@ import FBSDKLoginKit
 
 class FBHandler {
     
-    struct AlbumList {
-        let id: String,
-        name: String,
-        coverPhotoID: String
-        var coverPhotoURL: URL?
-    }
-    
-    struct AlbumPhoto {
-        let id: String,
-        name: String,
-        createdTime: String
-    }
-    
     enum PhotoSize: Int {
         case small = 225
         case medium
@@ -56,10 +43,11 @@ class FBHandler {
             } else {
                 print("Error: \(error!.localizedDescription)")
             }
+        NotificationCenter.default.post(name: Notification.Name("AlbumsFetched"), object: nil)
         }
     }
     
-    /// Get photo URL by id via Graph Request
+    /// Fetch photo URL by id via Graph Request
     func fetchCoverPhotoURL(by id: String, size: PhotoSize = .full) {
         var imageURL: URL?
         FBSDKGraphRequest(graphPath: id, parameters: ["fields":"images"], httpMethod: "GET").start {
@@ -96,6 +84,9 @@ class FBHandler {
                     self.albumList[albumIndex].coverPhotoURL = imageURL
                 }
             }
+            
+            NotificationCenter.default.post(name: Notification.Name("CoverPhotoFetched"), object: nil)
+            
         }
     }
     

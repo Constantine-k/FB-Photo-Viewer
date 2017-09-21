@@ -14,15 +14,19 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBOutlet weak var albumsTable: UITableView!
     
-    let list = ["Test 1", "Test 2", "Test 3"]
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        return fbHandler.albumList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "AlbumCell")
-        cell.textLabel?.text = list[indexPath.row]
+        let cellIdentifier = "AlbumTableViewCell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? AlbumTableViewCell else {
+            fatalError("The dequeued cell is not an instance of MealTableViewCell.")
+        }
+        
+        let album = fbHandler.albumList[indexPath.row]
+        cell.nameLabel.text = album.name
+        cell.photoImageView.image = album.coverPhotoImage
         
         return cell
     }
@@ -31,13 +35,24 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
 
         fbHandler.fetchAlbums()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("AlbumsFetched"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }    
+    }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("AlbumsFetched"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("CoverPhotoFetched"), object: nil)
+    }
+    
+    func updateTable() {
+        DispatchQueue.main.async() {
+            self.albumsTable.reloadData()
+        }
+    }
 
     /*
     // MARK: - Navigation
