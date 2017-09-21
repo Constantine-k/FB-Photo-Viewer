@@ -22,15 +22,16 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         loginButton.delegate = self
         loginButton.center = view.center
         view.addSubview(loginButton)
-        
-        if (FBSDKAccessToken.current() != nil) {
-            // User is logged in, do work such as go to next view controller.
-            print("User is logged in")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if FBSDKAccessToken.current() != nil {
+            performSegue(withIdentifier: "showAlbumsView", sender: nil)
         }
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
-        print("Completed login")
+        performSegue(withIdentifier: "showAlbumsView", sender: nil)
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {

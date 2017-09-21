@@ -8,19 +8,49 @@
 
 import UIKit
 
+import FBSDKCoreKit
+import FBSDKLoginKit
+
 class AlbumListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let fbHandler = FBHandler()
+    let loginManager = FBSDKLoginManager()
     
     @IBOutlet weak var albumsTable: UITableView!
+    
+    @IBAction func logOutButtonTouch(_ sender: UIButton) {
+        loginManager.logOut()
+        performSegue(withIdentifier: "showLoginView", sender: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // User is not logged in
+        if FBSDKAccessToken.current() == nil {
+            performSegue(withIdentifier: "showLoginView", sender: nil)
+        }
+        
+        fbHandler.fetchAlbums()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("AlbumsFetched"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("AlbumsFetched"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("CoverPhotoFetched"), object: nil)
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return fbHandler.albumList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellIdentifier = "AlbumTableViewCell"
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? AlbumTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "albumTableViewCell", for: indexPath) as? AlbumTableViewCell else {
             fatalError("The dequeued cell is not an instance of MealTableViewCell.")
         }
         
@@ -29,23 +59,6 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.photoImageView.image = album.coverPhotoImage
         
         return cell
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        fbHandler.fetchAlbums()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("AlbumsFetched"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("AlbumsFetched"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("CoverPhotoFetched"), object: nil)
     }
     
     func updateTable() {

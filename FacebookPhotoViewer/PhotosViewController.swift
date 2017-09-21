@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let fbHandler = FBHandler()
     
@@ -17,35 +17,47 @@ class PhotosViewController: UIViewController, UICollectionViewDataSource, UIColl
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        fbHandler.fetchAlbums()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("CoverPhotoFetched"), object: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellsAcross: CGFloat = 4
         let spaceBetweenCells: CGFloat = 5
-        let dim = collectionView.bounds.width / cellsAcross - spaceBetweenCells
+        let dimension = collectionView.bounds.width / cellsAcross - spaceBetweenCells
         
-        return CGSize(width: dim, height: dim)
+        return CGSize(width: dimension, height: dimension)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return fbHandler.albumList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cellIdentifier = "PhotosCollectionViewCell"
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? PhotosCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell else {
             fatalError("The dequeued cell is not an instance of PhotosCollectionViewCell")
         }
         
         //cell.photosImage
         
+        let album = fbHandler.albumList[indexPath.row]
+        cell.photosImage.image = album.coverPhotoImage
+        
         return cell
+    }
+    
+    func updateTable() {
+        DispatchQueue.main.async() {
+            self.PhotosCollectionView.reloadData()
+        }
     }
     
 
