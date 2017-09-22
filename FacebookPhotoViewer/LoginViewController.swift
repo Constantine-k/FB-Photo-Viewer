@@ -13,15 +13,14 @@ import FBSDKLoginKit
 
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
+    /// Facebook login button
+    @IBOutlet weak var loginButton: FBSDKLoginButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /// Facebook login button
-        let loginButton = FBSDKLoginButton()
         loginButton.readPermissions = ["email", "user_photos"];
         loginButton.delegate = self
-        loginButton.center = view.center
-        view.addSubview(loginButton)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -31,11 +30,14 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
-        performSegue(withIdentifier: "ShowAlbums", sender: nil)
+        if error == nil {
+            performSegue(withIdentifier: "ShowAlbums", sender: nil)
+        } else {
+            print("Error: \(error!.localizedDescription)")
+        }
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
     }
 
     override func didReceiveMemoryWarning() {

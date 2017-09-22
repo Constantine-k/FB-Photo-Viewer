@@ -20,15 +20,40 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KoF-0Q-G05" customClass="FBSDKLoginButton">
+                                <rect key="frame" x="166" y="483" width="42" height="30"/>
+                                <state key="normal" title="Log In"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook Photo Viewer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sYN-ly-Po4">
+                                <rect key="frame" x="85" y="98" width="205" height="24"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="LoginViewIcon" translatesAutoresizingMaskIntoConstraints="NO" id="nKM-bB-dpJ">
+                                <rect key="frame" x="125" y="234" width="125" height="104"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="nKM-bB-dpJ" firstAttribute="centerX" secondItem="sYN-ly-Po4" secondAttribute="centerX" id="2Sq-dD-GGq"/>
+                            <constraint firstItem="nKM-bB-dpJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" priority="999" id="Bnv-CH-7c0"/>
+                            <constraint firstItem="KoF-0Q-G05" firstAttribute="top" secondItem="nKM-bB-dpJ" secondAttribute="bottom" constant="36" id="DpX-jo-C38"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="KoF-0Q-G05" secondAttribute="bottom" constant="154" id="FEq-wz-oXa"/>
+                            <constraint firstItem="sYN-ly-Po4" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="78" id="Jf2-76-kWn"/>
+                            <constraint firstItem="nKM-bB-dpJ" firstAttribute="centerX" secondItem="KoF-0Q-G05" secondAttribute="centerX" id="WNC-cr-B2h"/>
+                            <constraint firstItem="nKM-bB-dpJ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="tEf-8I-cRL"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="loginButton" destination="KoF-0Q-G05" id="U86-df-heD"/>
                         <segue destination="7et-xa-taM" kind="show" identifier="ShowAlbums" id="txQ-fd-sij"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1033" y="893"/>
+            <point key="canvasLocation" x="1032.8" y="892.80359820089961"/>
         </scene>
         <!--Albums-->
         <scene sceneID="Fqw-e8-zXd">
@@ -214,4 +239,7 @@
             <point key="canvasLocation" x="1032.8" y="36.431784107946029"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="LoginViewIcon" width="125" height="104"/>
+    </resources>
 </document>
