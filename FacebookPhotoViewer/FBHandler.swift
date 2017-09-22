@@ -57,7 +57,7 @@ class FBHandler {
             if error == nil {
                 if let result = result as? [String: Any],
                     let resultImages = result["images"] as? [[String: Any]] {
-                    for (imageIndex, imageAttributes) in resultImages.enumerated() {
+                    imageLoop: for (imageIndex, imageAttributes) in resultImages.enumerated() {
                         if imageIndex == 0 {
                             if let imageSource = imageAttributes["source"] as? String {
                                 imageURL = URL(string: imageSource)
@@ -71,6 +71,7 @@ class FBHandler {
                                         imageURL = URL(string: imageSource)
                                     }
                                 }
+                                break imageLoop
                             default:
                                 break
                             }
@@ -123,7 +124,7 @@ class FBHandler {
             if error == nil {                
                 if let result = result as? [String: Any],
                     let resultImages = result["images"] as? [[String: Any]] {
-                    for (imageIndex, imageAttributes) in resultImages.enumerated() {
+                    imageLoop: for (imageIndex, imageAttributes) in resultImages.enumerated() {
                         if imageIndex == 0 {
                             if let imageSource = imageAttributes["source"] as? String {
                                 imageURL = URL(string: imageSource)
@@ -138,6 +139,7 @@ class FBHandler {
                                         thumbnailImageURL = URL(string: imageSource)
                                     }
                                 }
+                                break imageLoop
                             default:
                                 break
                             }
