@@ -20,24 +20,39 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     @IBAction func logOutButtonTouch(_ sender: UIButton) {
         loginManager.logOut()
-        performSegue(withIdentifier: "showLoginView", sender: nil)
+        performSegue(withIdentifier: "ShowLogin", sender: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // User is not logged in
-        if FBSDKAccessToken.current() == nil {
-            performSegue(withIdentifier: "showLoginView", sender: nil)
-        }
         
         fbHandler.fetchAlbums()
         NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("AlbumsFetched"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        // User is not logged in
+        if FBSDKAccessToken.current() == nil {
+            performSegue(withIdentifier: "ShowLogin", sender: nil)
+        }
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowPhotos" {
+            let photosViewController = segue.destination as? PhotosViewController
+            if photosViewController != nil {
+                if let senderCell = sender as? AlbumTableViewCell {
+                    photosViewController!.albumID = senderCell.albumID
+                }
+            }
+        }
     }
     
     deinit {
@@ -50,13 +65,14 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "albumTableViewCell", for: indexPath) as? AlbumTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumTableViewCell", for: indexPath) as? AlbumTableViewCell else {
             fatalError("The dequeued cell is not an instance of MealTableViewCell.")
         }
         
         let album = fbHandler.albumList[indexPath.row]
         cell.nameLabel.text = album.name
         cell.photoImageView.image = album.coverPhotoImage
+        cell.albumID = album.id
         
         return cell
     }
@@ -66,16 +82,6 @@ class AlbumListViewController: UIViewController, UITableViewDelegate, UITableVie
             self.albumsTable.reloadData()
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 

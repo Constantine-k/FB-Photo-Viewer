@@ -12,4 +12,7 @@ class PhotosCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var photosImage: UIImageView!
     
+    /// Full size image URL
+    var photosFullImageURL: URL?
+    
 }

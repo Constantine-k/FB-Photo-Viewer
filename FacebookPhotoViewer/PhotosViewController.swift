@@ -12,21 +12,46 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     let fbHandler = FBHandler()
     
+    var albumID: String?
+    
     @IBOutlet weak var PhotosCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         fbHandler.fetchAlbums()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTable), name: Notification.Name("CoverPhotoFetched"), object: nil)
+        if let albumID = albumID {
+            fbHandler.fetchPhotos(by: albumID)
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCollection), name: Notification.Name("PhotosFetched"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCollection), name: Notification.Name("PhotoURLFetched"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowSinglePhoto" {
+            let singlePhotoViewController = segue.destination as? SinglePhotoViewController
+            if singlePhotoViewController != nil {
+                if let senderCell = sender as? PhotosCollectionViewCell {
+                    if let imageURL = senderCell.photosFullImageURL {
+                        let photoData = try? Data(contentsOf: imageURL)
+                        if let photoData = photoData {
+                            singlePhotoViewController!.photoImage = UIImage(data: photoData)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("CoverPhotoFetched"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotosFetched"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotoURLFetched"), object: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -38,37 +63,25 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fbHandler.albumList.count
+        return fbHandler.photoList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell else {
             fatalError("The dequeued cell is not an instance of PhotosCollectionViewCell")
         }
         
-        //cell.photosImage
-        
-        let album = fbHandler.albumList[indexPath.row]
-        cell.photosImage.image = album.coverPhotoImage
+        let photo = fbHandler.photoList[indexPath.row]
+        cell.photosImage.image = photo.thumbnailImage
+        cell.photosFullImageURL = photo.imageURL
         
         return cell
     }
     
-    func updateTable() {
+    func updateCollection() {
         DispatchQueue.main.async() {
             self.PhotosCollectionView.reloadData()
         }
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

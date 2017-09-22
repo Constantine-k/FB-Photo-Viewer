@@ -20,9 +20,11 @@ class FBHandler {
     }
     
     /// List of all user's albums
-    var albumList = [AlbumList]()
+    var albumList = [Album]()
+    /// List of user's photos for current album
+    var photoList = [Photo]()
     
-    /// Fetch albums list via Graph Request and save it in `albumList`
+    /// Fetch album list via Graph Request and save it in `albumList`
     func fetchAlbums() {
         FBSDKGraphRequest(graphPath: "/me/albums", parameters: ["fields":"id,name,cover_photo, images"], httpMethod: "GET").start {
             (connection, result, error) in
@@ -34,8 +36,8 @@ class FBHandler {
                             let albumName = albumAttributes["name"],
                             let albumCoverPhotoDictionary = albumAttributes["cover_photo"] as? [String: Any] {
                             if let albumCoverPhotoID = albumCoverPhotoDictionary["id"] {
-                                self.albumList.append(AlbumList(id: String(describing: albumID), name: String(describing: albumName), coverPhotoID: String(describing: albumCoverPhotoID), coverPhotoURL: nil))
-                                self.fetchCoverPhotoURL(by: String(describing: albumCoverPhotoID), size: .small)
+                                self.albumList.append(Album(id: String(describing: albumID), name: String(describing: albumName), coverPhotoID: String(describing: albumCoverPhotoID), coverPhotoURL: nil))
+                                self.fetchCoverPhotoURL(by: String(describing: albumCoverPhotoID))
                             }
                         }
                     }
@@ -47,8 +49,8 @@ class FBHandler {
         }
     }
     
-    /// Fetch photo URL by id via Graph Request
-    func fetchCoverPhotoURL(by id: String, size: PhotoSize = .full) {
+    /// Fetch album cover photo URL by album id via Graph Request and save it in `albumList`
+    func fetchCoverPhotoURL(by id: String, size: PhotoSize = .small) {
         var imageURL: URL?
         FBSDKGraphRequest(graphPath: id, parameters: ["fields":"images"], httpMethod: "GET").start {
             (connection, result, error) in
@@ -86,6 +88,74 @@ class FBHandler {
             }
             
             NotificationCenter.default.post(name: Notification.Name("CoverPhotoFetched"), object: nil)
+            
+        }
+    }
+    
+    /// Fetch photo list via Graph Request and save it in `photoList`
+    func fetchPhotos(by id: String) {
+        FBSDKGraphRequest(graphPath: "/\(id)/photos", parameters: nil, httpMethod: "GET").start {
+            (connection, result, error) in
+            if error == nil {
+                if let resultDictionary = result as? [String: Any],
+                    let resultDictionaryData = resultDictionary["data"] as? [[String: Any]] {
+                    for photoAttributes in resultDictionaryData {
+                        if let photoID = photoAttributes["id"],
+                            let photoTime = photoAttributes["created_time"] {
+                            self.photoList.append(Photo(id: String(describing: photoID), createdTime: String(describing: photoTime), imageURL: nil, thumbnailImageURL: nil))
+                            self.fetchPhotoURL(by: String(describing: photoID))
+                        }
+                    }
+                }
+            } else {
+                print("Error: \(error!.localizedDescription)")
+            }
+            NotificationCenter.default.post(name: Notification.Name("PhotosFetched"), object: nil)
+        }
+    }
+    
+    /// Fetch photo URL by id via Graph Request and save it in `photoList`
+    func fetchPhotoURL(by id: String, thumbnailSize: PhotoSize = .small) {
+        var imageURL: URL?,
+            thumbnailImageURL: URL?
+        FBSDKGraphRequest(graphPath: id, parameters: ["fields":"images"], httpMethod: "GET").start {
+            (connection, result, error) in
+            if error == nil {                
+                if let result = result as? [String: Any],
+                    let resultImages = result["images"] as? [[String: Any]] {
+                    for (imageIndex, imageAttributes) in resultImages.enumerated() {
+                        if imageIndex == 0 {
+                            if let imageSource = imageAttributes["source"] as? String {
+                                imageURL = URL(string: imageSource)
+                                thumbnailImageURL = URL(string: imageSource)
+                            }
+                        } else {
+                            switch thumbnailSize {
+                            case .small:
+                                if let imageWidth = imageAttributes["width"] as? Int,
+                                    let imageSource = imageAttributes["source"] as? String {
+                                    if imageWidth == thumbnailSize.rawValue {
+                                        thumbnailImageURL = URL(string: imageSource)
+                                    }
+                                }
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+            } else {
+                print("Error: \(error!.localizedDescription)")
+            }
+            
+            for (photoIndex, photoItem) in self.photoList.enumerated() {
+                if photoItem.id == id {
+                    self.photoList[photoIndex].imageURL = imageURL
+                    self.photoList[photoIndex].thumbnailImageURL = thumbnailImageURL
+                }
+            }
+            
+            NotificationCenter.default.post(name: Notification.Name("PhotoURLFetched"), object: nil)
             
         }
     }

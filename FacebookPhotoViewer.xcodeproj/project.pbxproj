@@ -19,6 +19,7 @@
 		B5DD665D1F6AEADD00115193 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5DD665C1F6AEADD00115193 /* Assets.xcassets */; };
 		B5DD66601F6AEADD00115193 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5DD665E1F6AEADD00115193 /* LaunchScreen.storyboard */; };
 		B5E046D21F73E08C00F3D16E /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E046D11F73E08C00F3D16E /* PhotosCollectionViewCell.swift */; };
+		B5E046D41F7515AC00F3D16E /* SinglePhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E046D31F7515AC00F3D16E /* SinglePhotoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		B5DD665F1F6AEADD00115193 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B5DD66611F6AEADD00115193 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5E046D11F73E08C00F3D16E /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
+		B5E046D31F7515AC00F3D16E /* SinglePhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePhotoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				B5DD66571F6AEADD00115193 /* LoginViewController.swift */,
 				B5E046D11F73E08C00F3D16E /* PhotosCollectionViewCell.swift */,
 				B5D0DB791F6DC7BE00AE53BC /* PhotosViewController.swift */,
+				B5E046D31F7515AC00F3D16E /* SinglePhotoViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				B5DD66581F6AEADD00115193 /* LoginViewController.swift in Sources */,
 				B5D0DB781F6D3FA600AE53BC /* FBHandler.swift in Sources */,
 				B5D0DB7A1F6DC7BE00AE53BC /* PhotosViewController.swift in Sources */,
+				B5E046D41F7515AC00F3D16E /* SinglePhotoViewController.swift in Sources */,
 				B5D0DB731F6C177E00AE53BC /* AlbumListViewController.swift in Sources */,
 				B5E046D21F73E08C00F3D16E /* PhotosCollectionViewCell.swift in Sources */,
 				B5DD66561F6AEADD00115193 /* AppDelegate.swift in Sources */,

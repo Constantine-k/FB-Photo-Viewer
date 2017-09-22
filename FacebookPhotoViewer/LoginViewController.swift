@@ -26,12 +26,12 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         if FBSDKAccessToken.current() != nil {
-            performSegue(withIdentifier: "showAlbumsView", sender: nil)
+            performSegue(withIdentifier: "ShowAlbums", sender: nil)
         }
     }
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
-        performSegue(withIdentifier: "showAlbumsView", sender: nil)
+        performSegue(withIdentifier: "ShowAlbums", sender: nil)
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {

@@ -8,10 +8,10 @@
 
 import UIKit
 
-struct AlbumList {
+struct Album {
     let id: String,
-    name: String,
-    coverPhotoID: String
+        name: String,
+        coverPhotoID: String
     var coverPhotoURL: URL?
     var coverPhotoImage: UIImage? {
         if let coverPhotoURL = coverPhotoURL {
@@ -24,8 +24,27 @@ struct AlbumList {
     }
 }
 
-struct AlbumPhoto {
+struct Photo {
     let id: String,
-    name: String,
-    createdTime: String
+        createdTime: String
+    var imageURL: URL?,
+        thumbnailImageURL: URL?
+    var image: UIImage? {
+        if let imageURL = imageURL {
+            let photoData = try? Data(contentsOf: imageURL)
+            if let photoData = photoData {
+                return UIImage(data: photoData)
+            }
+        }
+        return nil
+    }
+    var thumbnailImage: UIImage? {
+        if let imageURL = thumbnailImageURL {
+            let photoData = try? Data(contentsOf: imageURL)
+            if let photoData = photoData {
+                return UIImage(data: photoData)
+            }
+        }
+        return nil
+    }
 }
