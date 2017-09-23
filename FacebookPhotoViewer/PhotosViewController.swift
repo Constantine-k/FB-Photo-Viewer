@@ -56,7 +56,7 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellsAcross: CGFloat = 4
-        let spaceBetweenCells: CGFloat = 5
+        let spaceBetweenCells: CGFloat = 1
         let dimension = collectionView.bounds.width / cellsAcross - spaceBetweenCells
         
         return CGSize(width: dimension, height: dimension)

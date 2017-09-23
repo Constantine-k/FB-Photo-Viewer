@@ -1,5 +1,5 @@
 # Facebook Photo Viewer
-iOS app that allows you to view your Facebook's albums and photos.
+iOS app that allows you to view your Facebook albums and photos. Supports both iPhone and iPad.
 
 ![Screenshot 1](/Screenshots/IMG_1.png?raw=true)
 ![Screenshot 2](/Screenshots/IMG_2.png?raw=true)
