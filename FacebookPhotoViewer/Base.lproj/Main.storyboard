@@ -146,7 +146,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="M7l-ys-Uf9">
-                                <rect key="frame" x="0.0" y="72" width="375" height="595"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="1" minimumInteritemSpacing="1" id="qQa-oz-mIy">
                                     <size key="itemSize" width="100" height="100"/>
@@ -190,7 +190,7 @@
                             <constraint firstItem="M7l-ys-Uf9" firstAttribute="leading" secondItem="vCQ-aK-7aj" secondAttribute="leading" id="bb7-iH-jcj"/>
                             <constraint firstAttribute="trailing" secondItem="M7l-ys-Uf9" secondAttribute="trailing" id="dmM-bF-yaf"/>
                             <constraint firstItem="hwh-65-hpZ" firstAttribute="top" secondItem="M7l-ys-Uf9" secondAttribute="bottom" id="hpD-Zc-AcO"/>
-                            <constraint firstItem="M7l-ys-Uf9" firstAttribute="top" secondItem="vCQ-aK-7aj" secondAttribute="top" constant="72" id="lrM-09-81T"/>
+                            <constraint firstItem="M7l-ys-Uf9" firstAttribute="top" secondItem="vCQ-aK-7aj" secondAttribute="top" id="lrM-09-81T"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Photos" id="fdA-m1-900"/>
