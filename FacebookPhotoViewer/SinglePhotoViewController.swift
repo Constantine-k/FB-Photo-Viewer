@@ -10,30 +10,27 @@ import UIKit
 
 class SinglePhotoViewController: UIViewController {
     
-    /// Image that is passed by previous controller
-    var photoImage: UIImage?
+    /// Image URL that is passed by previous controller
+    var photoImageURL: URL?
     
     /// Image view that is displayed
     let photoImageView = UIImageView()
     
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        photoImageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        photoImageView.contentMode = .scaleAspectFit
-        
-        if let photoImage = photoImage {
-            photoImageView.image = photoImage
+        if let photoImageURL = photoImageURL {
+            photoImageView.downloadedFrom(url: photoImageURL)
+            photoImageView.contentMode = .scaleAspectFit
+            photoImageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
             view.addSubview(photoImageView)
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
     
-    // Handle image rotation
     override func viewWillLayoutSubviews() {
+        // Handle image rotation
         photoImageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
     }
 

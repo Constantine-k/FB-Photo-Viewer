@@ -13,6 +13,7 @@ struct Album {
         name: String,
         coverPhotoID: String
     var coverPhotoURL: URL?
+    // !!!!!
     var coverPhotoImage: UIImage? {
         if let coverPhotoURL = coverPhotoURL {
             let photoData = try? Data(contentsOf: coverPhotoURL)

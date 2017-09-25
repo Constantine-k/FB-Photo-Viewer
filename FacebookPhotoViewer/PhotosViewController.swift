@@ -16,6 +16,8 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     @IBOutlet weak var PhotosCollectionView: UICollectionView!
     
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,9 +28,10 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         NotificationCenter.default.addObserver(self, selector: #selector(updateCollection), name: Notification.Name("PhotosFetched"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateCollection), name: Notification.Name("PhotoURLFetched"), object: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotosFetched"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotoURLFetched"), object: nil)
     }
     
     // MARK: - Navigation
@@ -38,21 +41,13 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
             let singlePhotoViewController = segue.destination as? SinglePhotoViewController
             if singlePhotoViewController != nil {
                 if let senderCell = sender as? PhotosCollectionViewCell {
-                    if let imageURL = senderCell.photosFullImageURL {
-                        let photoData = try? Data(contentsOf: imageURL)
-                        if let photoData = photoData {
-                            singlePhotoViewController!.photoImage = UIImage(data: photoData)
-                        }
-                    }
+                    singlePhotoViewController?.photoImageURL = senderCell.photosFullImageURL
                 }
             }
         }
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotosFetched"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("PhotoURLFetched"), object: nil)
-    }
+    // MARK: - Other methods
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let cellsAcross: CGFloat = 4
@@ -72,8 +67,10 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
         
         let photo = fbHandler.photoList[indexPath.row]
-        cell.photosImage.image = photo.thumbnailImage
-        cell.photosFullImageURL = photo.imageURL
+        if let photoURL = photo.imageURL {
+            cell.photosImage.downloadedFrom(url: photoURL)
+            cell.photosFullImageURL = photoURL
+        }
         
         return cell
     }

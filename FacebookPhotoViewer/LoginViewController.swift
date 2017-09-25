@@ -16,6 +16,8 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
     /// Facebook login button
     @IBOutlet weak var loginButton: FBSDKLoginButton!
     
+    // MARK: - View lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,20 +31,19 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate {
         }
     }
     
+    // MARK: - Event handling
+    
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         if error == nil {
             performSegue(withIdentifier: "ShowAlbums", sender: nil)
         } else {
-            print("Error: \(error!.localizedDescription)")
+            if let error = error?.localizedDescription {
+                print("Error: \(error)")
+            }
         }
     }
     
-    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {}
 
 }
 
